@@ -49,7 +49,6 @@ class InvoicesController < ApplicationController
 
       end
       render :json => {
-        message: 'successful show',
         invoices: construct_invoice
       }
     end
@@ -71,13 +70,13 @@ class InvoicesController < ApplicationController
       #   )
       # end
       render :json => {
-        message: 'successful create'
+        message: 'incomplete create route'
       }
     end
 
     def update
       render :json => {
-        message: 'successful update'
+        message: 'incomplete update route'
       }
     end
 
