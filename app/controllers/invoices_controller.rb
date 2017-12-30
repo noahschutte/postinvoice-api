@@ -41,35 +41,37 @@ class InvoicesController < ApplicationController
     end
 
     def create
-      if request[:vendor][:isNew] == true
-        vendor = Vendor.create!(name: request[:vendor][:name])
+      vendor = eval(request[:vendor])
+      if vendor[:isNew] === true
+        vendor = Vendor.create!(name: vendor[:name])
         vendor_id = vendor.id
       else
-        vendor_id = request[:vendor][:id]
+        vendor_id = vendor[:id]
       end
 
       invoice = Invoice.create!(
         date: request[:date],
-        vendor_id: vendor_id,
+        vendor: Vendor.find(vendor_id),
         number: request[:number],
         total: request[:total]
       )
 
-      if request[:code][:isNew] == true
-        code = Code.create!(name: request[:code][:name])
-        code_id = code.id
-      else
-        code_id = request[:code][:id]
-      end
-
-      items = request[:items]
+      items = eval(request[:items])
       items.each do |item|
+        if item[:code][:isNew] === true
+          code = Code.create!(name: item[:code][:name])
+          code_id = code.id
+        else
+          code_id = item[:code][:id]
+        end
+
         Item.create!(
-          invoice_id: invoice.id,
-          code_id: code_id,
-          amount: item['amount']
+          invoice: Invoice.find(invoice.id),
+          code: Code.find(code_id),
+          amount: item[:amount]
         )
       end
+
       render :status => :ok, :json => {
         message: 'Created Invoice, Items, and Vendor/Codes as needed.'
       }
