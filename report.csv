@@ -1,4 +1,4 @@
-Date,Supplier Name,Invoice Number,Code,Amount
+Date,Vendor,Invoice Number,Code,Amount
 2017-12-17,Company A,1111,Wine,50.0
 2017-12-17,Company A,1111,Beer,50.0
 2017-12-17,Company B,2222,Wine,50.0

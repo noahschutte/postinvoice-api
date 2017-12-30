@@ -6,49 +6,35 @@ class InvoicesController < ApplicationController
       Invoice.all.each do |invoice|
         construct_invoice = {
           id: invoice.id,
+          number: invoice.number,
+          vendor: Vendor.find(invoice.vendor_id),
           date: invoice.date,
-          supplierName: invoice.supplier_name,
-          invoiceNumber: invoice.invoice_number,
-          total: ActionController::Base.helpers.number_to_currency(invoice.total, precision: 2)
+          items: Item.where(invoice_id: invoice.id),
+          total: invoice.total,
+          createdAt: invoice.created_at,
+          updatedAt: invoice.updated_at
         }
-        items = []
-        Item.where(invoice_id: invoice.id).each do |item|
-          construct_item = {
-            id: item.id,
-            code: item.code,
-            amount: ActionController::Base.helpers.number_to_currency(item.amount, precision: 2)
-          }
-          items.push(construct_item)
-        end
-        construct_invoice['items'] = items
-
         invoices.push(construct_invoice)
       end
+
       render :status => :ok, :json => {
         invoices: invoices
       }
     end
 
     def show
-      construct_invoice = {}
-      Invoice.where(id: params[:id]).each do |invoice|
-        construct_invoice['id'] = invoice.id
-        construct_invoice['date'] = invoice.date
-        construct_invoice['supplierName'] = invoice.supplier_name
-        construct_invoice['invoiceNumber'] = invoice.invoice_number
-        construct_invoice['total'] = ActionController::Base.helpers.number_to_currency(invoice.total, precision: 2)
-        items = []
-        Item.where(invoice_id: invoice.id).each do |item|
-          construct_item = {
-            id: item.id,
-            code: item.code,
-            amount: ActionController::Base.helpers.number_to_currency(item.amount, precision: 2)
-          }
-          items.push(construct_item)
-        end
-        construct_invoice['items'] = items
+      invoice = Invoice.find(params[:id])
+      construct_invoice = {
+        id: invoice.id,
+        number: invoice.number,
+        vendor: Vendor.find(invoice.vendor_id),
+        date: invoice.date,
+        items: Item.where(invoice_id: invoice.id),
+        total: invoice.total,
+        createdAt: invoice.created_at,
+        updatedAt: invoice.updated_at
+      }
 
-      end
       render :status => :ok, :json => {
         invoice: construct_invoice
       }
