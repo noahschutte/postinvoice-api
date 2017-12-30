@@ -1,17 +1,8 @@
 class VendorsController < ApplicationController
 
   def index
-    vendors = []
-
-    Vendor.all.each do |vendor|
-      vendors.push(
-        {
-          id: vendor.id,
-          name: vendor.name
-        }
-      )
-    end
-
+    vendors = Vendor.all
+    
     render :status => :ok, :json => {
       vendors: vendors
     }

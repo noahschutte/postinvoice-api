@@ -1,16 +1,7 @@
 class CodesController < ApplicationController
 
   def index
-    codes = []
-
-    Code.all.each do |code|
-      codes.push(
-        {
-          id: code.id,
-          name: code.name
-        }
-      )
-    end
+    codes = Code.all
 
     render :status => :ok, :json => {
       codes: codes
