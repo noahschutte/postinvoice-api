@@ -181,3 +181,23 @@ items.each do |item|
     category_id: item[:category_id]
   )
 end
+
+inventory_sheet1 = {
+  date: Date.new(2017, 12, 17),
+  beer_total: 1,
+  wine_total: 2.2,
+  food_total: 3.33
+}
+
+inventory_sheets = [
+  inventory_sheet1
+]
+
+inventory_sheets.each do |inventory_sheet|
+  InventorySheet.create!(
+    date: inventory_sheet[:date],
+    beer_total: inventory_sheet[:beer_total],
+    wine_total: inventory_sheet[:wine_total],
+    food_total: inventory_sheet[:food_total]
+  )
+end

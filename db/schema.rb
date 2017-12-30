@@ -10,16 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171230223836) do
+ActiveRecord::Schema.define(version: 20171230230541) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "categories", force: :cascade do |t|
     t.string   "name",       null: false
+    t.date     "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_categories_on_created_at", using: :btree
+    t.index ["deleted_at"], name: "index_categories_on_deleted_at", using: :btree
     t.index ["name"], name: "index_categories_on_name", using: :btree
     t.index ["updated_at"], name: "index_categories_on_updated_at", using: :btree
   end
@@ -35,6 +37,23 @@ ActiveRecord::Schema.define(version: 20171230223836) do
     t.index ["deleted_at"], name: "index_codes_on_deleted_at", using: :btree
     t.index ["name"], name: "index_codes_on_name", using: :btree
     t.index ["updated_at"], name: "index_codes_on_updated_at", using: :btree
+  end
+
+  create_table "inventory_sheets", force: :cascade do |t|
+    t.date     "date",                               null: false
+    t.decimal  "beer_total", precision: 8, scale: 2, null: false
+    t.decimal  "wine_total", precision: 8, scale: 2, null: false
+    t.decimal  "food_total", precision: 8, scale: 2, null: false
+    t.date     "deleted_at"
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.index ["beer_total"], name: "index_inventory_sheets_on_beer_total", using: :btree
+    t.index ["created_at"], name: "index_inventory_sheets_on_created_at", using: :btree
+    t.index ["date"], name: "index_inventory_sheets_on_date", using: :btree
+    t.index ["deleted_at"], name: "index_inventory_sheets_on_deleted_at", using: :btree
+    t.index ["food_total"], name: "index_inventory_sheets_on_food_total", using: :btree
+    t.index ["updated_at"], name: "index_inventory_sheets_on_updated_at", using: :btree
+    t.index ["wine_total"], name: "index_inventory_sheets_on_wine_total", using: :btree
   end
 
   create_table "invoices", force: :cascade do |t|
