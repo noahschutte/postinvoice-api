@@ -3,13 +3,13 @@ class InvoicesController < ApplicationController
 
     def index
       invoices = []
-      Invoice.all.each do |invoice|
+      Invoice.where(deleted_at: nil).each do |invoice|
         construct_invoice = {
           id: invoice.id,
           number: invoice.number,
-          vendor: Vendor.find(invoice.vendor_id),
+          vendor: Vendor.find_by(id: invoice.vendor_id, deleted_at: nil),
           date: invoice.date,
-          items: Item.where(invoice_id: invoice.id),
+          items: Item.where(invoice_id: invoice.id, deleted_at: nil),
           total: invoice.total,
           createdAt: invoice.created_at,
           updatedAt: invoice.updated_at
@@ -23,13 +23,13 @@ class InvoicesController < ApplicationController
     end
 
     def show
-      invoice = Invoice.find(params[:id])
+      invoice = Invoice.find_by(id: params[:id], deleted_at: nil)
       construct_invoice = {
         id: invoice.id,
         number: invoice.number,
-        vendor: Vendor.find(invoice.vendor_id),
+        vendor: Vendor.find_by(id: invoice.vendor_id, deleted_at: nil),
         date: invoice.date,
-        items: Item.where(invoice_id: invoice.id),
+        items: Item.where(invoice_id: invoice.id, deleted_at: nil),
         total: invoice.total,
         createdAt: invoice.created_at,
         updatedAt: invoice.updated_at
@@ -51,7 +51,7 @@ class InvoicesController < ApplicationController
 
       invoice = Invoice.create!(
         date: request[:date],
-        vendor: Vendor.find(vendor_id),
+        vendor: Vendor.find_by(id: vendor_id, deleted_at: nil),
         number: request[:number],
         total: request[:total]
       )
@@ -66,8 +66,8 @@ class InvoicesController < ApplicationController
         end
 
         Item.create!(
-          invoice: Invoice.find(invoice.id),
-          code: Code.find(code_id),
+          invoice: Invoice.find_by(id: invoice.id, deleted_at: nil),
+          code: Code.find_by(id: code_id, deleted_at: nil),
           amount: item[:amount]
         )
       end
@@ -79,9 +79,9 @@ class InvoicesController < ApplicationController
 
     def destroy
       invoice_id = params[:id]
-      invoice = Invoice.find(invoice_id)
+      invoice = Invoice.find_by(id: invoice_id, deleted_at: nil)
       vendor_id = invoice.vendor_id
-      invoices = Invoice.where(vendor_id: vendor_id)
+      invoices = Invoice.where(vendor_id: vendor_id, deleted_at: nil)
 
       vendor_invoices = 0
       invoices.each do |invoice|
@@ -89,42 +89,35 @@ class InvoicesController < ApplicationController
           vendor_invoices += 1
         end
       end
-
       if vendor_invoices == 1
-        vendor = Vendor.find(vendor_id)
-        vendor.destroy!
+        vendor = Vendor.find_by(id: vendor_id, deleted_at: nil)
+        vendor.deleted_at = DateTime.now.to_date
+        vendor.save
       end
 
       code_ids = []
-      invoice_items = Item.where(invoice_id: invoice_id)
+      invoice_items = Item.where(invoice_id: invoice_id, deleted_at: nil)
       invoice_items.each do |invoice_item|
         code_ids.push(invoice_item.code_id)
       end
-
       code_ids.each do |code_id|
-        items = Item.where(code_id: code_id)
-        items_from_invoice_item_code = 0
-
-        items.each do |item|
-          if item.code_id == code_id
-            items_from_invoice_item_code += 1
-          end
-        end
-
-        if items_from_invoice_item_code == invoice_items.count
-          code = Code.find(code_id)
-          code.destroy!
+        items_with_code = Item.where(code_id: code_id, deleted_at: nil)
+        if items_with_code.count == 1
+          code = Code.find_by(id: code_id, deleted_at: nil)
+          code.deleted_at = DateTime.now.to_date
+          code.save
         end
       end
 
-      items = Item.where(invoice_id: invoice_id)
-      if items
-        items.each do |item|
-          item.destroy!
+      if invoice_items.count
+        invoice_items.each do |item|
+          item.deleted_at = DateTime.now.to_date
+          item.save
         end
       end
 
-      invoice.destroy!
+      invoice.deleted_at = DateTime.now.to_date
+      invoice.save
 
       render :status => :ok, :json => {
         message: 'Destroyed Invoice, Items, and Vendor/Codes as needed.'

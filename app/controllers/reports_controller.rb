@@ -11,7 +11,7 @@ class ReportsController < ApplicationController
       ]
       csv << headers
 
-      Item.all.each do |item|
+      Item.where(deleted_at: nil).each do |item|
         invoice = Invoice.find(item.invoice_id)
         row = [
           invoice.date,
