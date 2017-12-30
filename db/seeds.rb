@@ -77,13 +77,44 @@ invoices.each do |invoice|
     total: invoice[:total]
   )
 end
-#
-code1 = {
+
+category1 = {
   name: 'Beer'
 }
 
-code2 = {
+category2 = {
   name: 'Wine'
+}
+
+category3 = {
+  name: 'Food'
+}
+
+category4 = {
+  name: 'Other'
+}
+
+categories = [
+  category1,
+  category2,
+  category3,
+  category4
+]
+
+categories.each do |category|
+  Category.create!(
+    name: category[:name]
+  )
+end
+
+code1 = {
+  name: 'Beer',
+  category_id: Category.find_by(id: 1).id
+}
+
+code2 = {
+  name: 'Wine',
+  category_id: Category.find_by(id: 2).id
 }
 
 codes = [
@@ -93,43 +124,50 @@ codes = [
 
 codes.each do |code|
   Code.create(
-    name: code[:name]
+    name: code[:name],
+    category_id: code[:category_id]
   )
 end
 
 a1 = {
   invoice_id: Invoice.find(1).id,
   code_id: Code.find(2).id,
+  category_id: Code.find(2).category_id,
   amount: 11
 }
 
 a2 = {
   invoice_id: Invoice.find(1).id,
   code_id: Code.find(1).id,
+  category_id: Code.find(2).category_id,
   amount: 22.22
 }
 
 b1 = {
   invoice_id: Invoice.find(2).id,
   code_id: Code.find(2).id,
+  category_id: Code.find(2).category_id,
   amount: 33.3
 }
 
 c1 = {
   invoice_id: Invoice.find(3).id,
   code_id: Code.find(2).id,
+  category_id: Code.find(2).category_id,
   amount: 44.44
 }
 
 d1 = {
   invoice_id: Invoice.find(4).id,
   code_id: Code.find(2).id,
+  category_id: Code.find(2).category_id,
   amount: 55.555
 }
 
 e1 = {
   invoice_id: Invoice.find(5).id,
   code_id: Code.find(2).id,
+  category_id: Code.find(2).category_id,
   amount: 66
 }
 
@@ -139,6 +177,7 @@ items.each do |item|
   Item.create(
     invoice_id: item[:invoice_id],
     code_id: item[:code_id],
-    amount: item[:amount]
+    amount: item[:amount],
+    category_id: item[:category_id]
   )
 end

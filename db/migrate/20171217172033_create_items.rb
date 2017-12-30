@@ -3,6 +3,7 @@ class CreateItems < ActiveRecord::Migration[5.0]
     create_table :items do |t|
       t.references :invoice, null: false, index: true
       t.references :code, null: false, index: true
+      t.references :category, null: false, index: true
 
       t.decimal :amount, precision: 8, scale: 2, null: false, index: true
 
