@@ -187,7 +187,7 @@ code32 = {
   category_id: Category.find_by(id: 4).id
 }
 
-code32 = {
+code33 = {
   name: 'Keg Deposit/Credit',
   category_id: Category.find_by(id: 4).id
 }
