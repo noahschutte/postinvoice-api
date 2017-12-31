@@ -131,14 +131,14 @@ end
 
 a1 = {
   invoice_id: Invoice.find(1).id,
-  code_id: Code.find(2).id,
-  category_id: Code.find(2).category_id,
+  code_id: Code.find(1).id,
+  category_id: Code.find(1).category_id,
   amount: 11
 }
 
 a2 = {
   invoice_id: Invoice.find(1).id,
-  code_id: Code.find(1).id,
+  code_id: Code.find(2).id,
   category_id: Code.find(2).category_id,
   amount: 22.22
 }
