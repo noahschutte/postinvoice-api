@@ -40,28 +40,28 @@ a = {
 }
 
 b = {
-  date: Date.new(2017, 12, 17),
+  date: Date.new(2017, 12, 18),
   vendor_id: Vendor.find(2).id,
   number: '2222',
   total: 33.3
 }
 
 c = {
-  date: Date.new(2017, 12, 17),
+  date: Date.new(2017, 12, 19),
   vendor_id: Vendor.find(3).id,
   number: '3333',
   total: 44.44
 }
 
 d = {
-  date: Date.new(2017, 12, 17),
+  date: Date.new(2017, 12, 20),
   vendor_id: Vendor.find(4).id,
   number: '4444',
   total: 55.555
 }
 
 e = {
-  date: Date.new(2017, 12, 17),
+  date: Date.new(2017, 12, 21),
   vendor_id: Vendor.find(5).id,
   number: '5555',
   total: 66
@@ -189,8 +189,16 @@ inventory_sheet1 = {
   food_total: 3.33
 }
 
+inventory_sheet2 = {
+  date: Date.new(2017, 12, 24),
+  beer_total: 4.444,
+  wine_total: 5.555,
+  food_total: 6.666
+}
+
 inventory_sheets = [
-  inventory_sheet1
+  inventory_sheet1,
+  inventory_sheet2
 ]
 
 inventory_sheets.each do |inventory_sheet|
