@@ -23,8 +23,9 @@ class ReportsController < ApplicationController
     #     csv << row
     #   end
 
-    category = Category.find_by(id: params[:category], deleted_at: nil)
-    category_total_sales = params[:categoryTotalSales]
+    beer_total_sales = params[:beerTotalSales]
+    wine_total_sales = params[:wineTotalSales]
+    food_total_sales = params[:foodTotalSales]
 
     start_inventory_sheet = InventorySheet.find_by(id: params[:startInventorySheet], deleted_at: nil)
     end_inventory_sheet = InventorySheet.find_by(id: params[:endInventorySheet], deleted_at: nil)
@@ -32,16 +33,12 @@ class ReportsController < ApplicationController
     start_invoice_date_range = DateTime.parse(params[:startInvoiceDateRange])
     end_invoice_date_range = DateTime.parse(params[:endInvoiceDateRange])
 
-    if category.name == 'Beer'
-      prior_inventory_amount = start_inventory_sheet.beer_total
-      ending_inventory_amount = end_inventory_sheet.beer_total
-    elsif category.name == 'Wine'
-      prior_inventory_amount = start_inventory_sheet.wine_total
-      ending_inventory_amount = end_inventory_sheet.wine_total
-    elsif category.name == 'Food'
-      prior_inventory_amount = start_inventory_sheet.food_total
-      ending_inventory_amount = end_inventory_sheet.food_total
-    end
+    beer_prior_inventory_amount = start_inventory_sheet.beer_total
+    beer_ending_inventory_amount = end_inventory_sheet.beer_total
+    wine_prior_inventory_amount = start_inventory_sheet.wine_total
+    wine_ending_inventory_amount = end_inventory_sheet.wine_total
+    food_prior_inventory_amount = start_inventory_sheet.food_total
+    food_ending_inventory_amount = end_inventory_sheet.food_total
 
     invoices = Invoice.where(date: start_invoice_date_range..end_invoice_date_range, deleted_at: nil)
     invoice_ids = []
@@ -49,18 +46,44 @@ class ReportsController < ApplicationController
       invoice_ids.push(invoice.id)
     end
 
-    items = Item.where(invoice_id: invoice_ids, category_id: category.id, deleted_at: nil)
+    beer_items = Item.where(invoice_id: invoice_ids, category_id: 1, deleted_at: nil)
+    wine_items = Item.where(invoice_id: invoice_ids, category_id: 2, deleted_at: nil)
+    food_items = Item.where(invoice_id: invoice_ids, category_id: 3, deleted_at: nil)
 
-    category_purchases_amount = 0
-    items.each do |item|
-      category_purchases_amount += item.amount
+    beer_purchases_amount = 0
+    beer_items.each do |beer_item|
+      beer_purchases_amount += beer_item.amount
     end
 
-    total_inventory_cost = prior_inventory_amount + category_purchases_amount - ending_inventory_amount
-    cost_percentage = ActionController::Base.helpers.number_to_percentage(total_inventory_cost / category_total_sales.to_i * 100, precision: 2)
+    wine_purchases_amount = 0
+    wine_items.each do |wine_item|
+      wine_purchases_amount += wine_item.amount
+    end
 
+    food_purchases_amount = 0
+    food_items.each do |food_item|
+      food_purchases_amount += food_item.amount
+    end
+
+    if beer_total_sales
+      beer_inventory_cost = beer_prior_inventory_amount + beer_purchases_amount - beer_ending_inventory_amount
+      beer_cost_percentage = ActionController::Base.helpers.number_to_percentage(beer_inventory_cost / beer_total_sales.to_i * 100, precision: 2)
+    end
+
+    if wine_total_sales
+      wine_inventory_cost = wine_prior_inventory_amount + wine_purchases_amount - wine_ending_inventory_amount
+      wine_cost_percentage = ActionController::Base.helpers.number_to_percentage(wine_inventory_cost / wine_total_sales.to_i * 100, precision: 2)
+    end
+
+    if food_total_sales
+      food_inventory_cost = food_prior_inventory_amount + food_purchases_amount - food_ending_inventory_amount
+      food_cost_percentage = ActionController::Base.helpers.number_to_percentage(food_inventory_cost / food_total_sales.to_i * 100, precision: 2)
+    end
+    
     render :json => {
-      cost_percentage: cost_percentage
+      beerCostPercentage: beer_cost_percentage,
+      wineCostPercentage: wine_cost_percentage,
+      foodCostPercentage: food_cost_percentage
     }
   end
 
