@@ -64,7 +64,7 @@ class InvoicesController < ApplicationController
         Item.create!(
           invoice: Invoice.find_by(id: invoice.id, deleted_at: nil),
           code: code,
-          category: code.category_id,
+          category: Category.find_by(id: code.category_id),
           amount: item[:amount]
         )
       end
