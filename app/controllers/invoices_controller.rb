@@ -58,20 +58,13 @@ class InvoicesController < ApplicationController
 
       items = eval(request[:items])
       items.each do |item|
-        if item[:code][:isNew] === true
-          code = Code.create!(
-            name: item[:code][:name],
-            category: Category.find_by(id: item[:categoryId], deleted_at: nil)
-          )
-          code_id = code.id
-        else
-          code_id = item[:code][:id]
-        end
+        code_id = item[:code][:id]
+        code = Code.find_by(id: code_id, deleted_at: nil)
 
         Item.create!(
           invoice: Invoice.find_by(id: invoice.id, deleted_at: nil),
-          code: Code.find_by(id: code_id, deleted_at: nil),
-          category: Category.find_by(id: item[:categoryId]),
+          code: code,
+          category: code.category_id,
           amount: item[:amount]
         )
       end
