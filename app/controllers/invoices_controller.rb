@@ -41,7 +41,7 @@ class InvoicesController < ApplicationController
     end
 
     def create
-      vendor = eval(request[:vendor])
+      vendor = request[:vendor]
       if vendor[:isNew]
         vendor = Vendor.create!(name: vendor[:name])
         vendor_id = vendor.id
@@ -56,7 +56,7 @@ class InvoicesController < ApplicationController
         total: request[:total]
       )
 
-      items = eval(request[:items])
+      items = request[:items]
       items.each do |item|
         code_id = item[:code][:id]
         code = Code.find_by(id: code_id, deleted_at: nil)
