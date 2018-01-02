@@ -42,7 +42,7 @@ class InvoicesController < ApplicationController
 
     def create
       vendor = eval(request[:vendor])
-      if vendor[:isNew] === true
+      if vendor[:isNew]
         vendor = Vendor.create!(name: vendor[:name])
         vendor_id = vendor.id
       else
