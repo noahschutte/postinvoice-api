@@ -26,7 +26,7 @@ class InventorySheetsController < ApplicationController
       )
 
       render :status => :ok, :json => {
-        invoiceSheet: invoice_sheet
+        invoiceSheetId: invoice_sheet.id
       }
     end
 
