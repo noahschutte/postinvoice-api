@@ -69,11 +69,19 @@ class InvoicesController < ApplicationController
         )
       end
 
-      print "invoice: ", invoice
-      print "invoice.id: ", invoice.id
+      construct_invoice = {
+        id: invoice.id,
+        number: invoice.number,
+        vendor: Vendor.find_by(id: invoice.vendor_id, deleted_at: nil),
+        date: invoice.date,
+        items: Item.where(invoice_id: invoice.id, deleted_at: nil),
+        total: invoice.total,
+        createdAt: invoice.created_at,
+        updatedAt: invoice.updated_at
+      }
 
       render :status => :ok, :json => {
-        invoice: invoice
+        invoice: construct_invoice
       }
     end
 
