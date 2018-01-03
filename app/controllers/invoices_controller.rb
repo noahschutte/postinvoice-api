@@ -69,6 +69,9 @@ class InvoicesController < ApplicationController
         )
       end
 
+      print "invoice: ", invoice
+      print "invoice.id: ", invoice.id
+
       render :status => :ok, :json => {
         invoice: invoice
       }
