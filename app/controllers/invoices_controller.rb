@@ -70,7 +70,7 @@ class InvoicesController < ApplicationController
       end
 
       render :status => :ok, :json => {
-        message: 'Created Invoice, Items, and Vendor/Codes as needed.'
+        invoice: invoice
       }
     end
 
