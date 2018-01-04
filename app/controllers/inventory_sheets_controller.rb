@@ -18,7 +18,7 @@ class InventorySheetsController < ApplicationController
     end
 
     def create
-      invoice_sheet = InventorySheet.create!(
+      inventory_sheet = InventorySheet.create!(
         date: request[:date],
         beer_total: request[:beerTotal],
         wine_total: request[:wineTotal],
@@ -26,7 +26,7 @@ class InventorySheetsController < ApplicationController
       )
 
       render :status => :ok, :json => {
-        invoiceSheetId: invoice_sheet.id
+        inventorySheetId: inventory_sheet.id
       }
     end
 
