@@ -373,9 +373,9 @@ end
 
 inventory_sheet1 = {
   date: Date.new(2017, 12, 17),
-  beer_total: 1,
-  wine_total: 2.2,
-  food_total: 3.33
+  beer_total: 9,
+  wine_total: 8.8,
+  food_total: 7.77
 }
 
 inventory_sheet2 = {
@@ -396,5 +396,31 @@ inventory_sheets.each do |inventory_sheet|
     beer_total: inventory_sheet[:beer_total],
     wine_total: inventory_sheet[:wine_total],
     food_total: inventory_sheet[:food_total]
+  )
+end
+
+report1 = {
+  start_inventory_sheet: InventorySheet.find(1),
+  end_inventory_sheet: InventorySheet.find(2),
+  start_date_range: '2017-12-17',
+  end_date_range: '2017-12-24',
+  beer_sales_total: 123.45,
+  wine_sales_total: 2345.6,
+  food_sales_total: 34567
+}
+
+reports = [
+  report1
+]
+
+reports.each do |report|
+  Report.create!(
+    start_inventory_sheet: report[:start_inventory_sheet],
+    end_inventory_sheet: report[:end_inventory_sheet],
+    start_date_range: report[:start_date_range],
+    end_date_range: report[:end_date_range],
+    beer_sales_total: report[:beer_sales_total],
+    wine_sales_total: report[:wine_sales_total],
+    food_sales_total: report[:food_sales_total],
   )
 end
