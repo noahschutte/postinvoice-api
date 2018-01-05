@@ -1,43 +1,49 @@
 class InventorySheetsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-    def index
-      inventory_sheets = InventorySheet.where(deleted_at: nil)
+  def index
+    inventory_sheets = InventorySheet.where(deleted_at: nil)
 
-      render :status => :ok, :json => {
-        inventorySheets: inventory_sheets
-      }
+    render :status => :ok, :json => {
+      inventorySheets: inventory_sheets
+    }
+  end
+
+  def show
+    inventory_sheet = InventorySheet.find_by(id: params[:id], deleted_at: nil)
+
+    render :status => :ok, :json => {
+      inventorySheet: inventory_sheet
+    }
+  end
+
+  def create
+    inventory_sheet = InventorySheet.create!(
+      date: request[:date],
+      beer_total: request[:beerTotal],
+      wine_total: request[:wineTotal],
+      food_total: request[:foodTotal]
+    )
+
+    render :status => :ok, :json => {
+      inventorySheetId: inventory_sheet.id
+    }
+  end
+
+  def destroy
+    inventory_sheet = InventorySheet.find_by(id: params[:id], deleted_at: nil)
+    inventory_sheet.deleted_at = DateTime.now.to_date
+    inventory_sheet.save
+
+    reports_to_delete = Report.where(start_inventory_sheet_id: inventory_sheet.id, deleted_at: nil).or(Report.where(end_inventory_sheet_id: inventory_sheet.id, deleted_at: nil))
+    reports_to_delete.each do |report|
+      report.deleted_at = DateTime.now.to_date
+      report.save
     end
 
-    def show
-      inventory_sheet = InventorySheet.find_by(id: params[:id], deleted_at: nil)
-
-      render :status => :ok, :json => {
-        inventorySheet: inventory_sheet
-      }
-    end
-
-    def create
-      inventory_sheet = InventorySheet.create!(
-        date: request[:date],
-        beer_total: request[:beerTotal],
-        wine_total: request[:wineTotal],
-        food_total: request[:foodTotal]
-      )
-
-      render :status => :ok, :json => {
-        inventorySheetId: inventory_sheet.id
-      }
-    end
-
-    def destroy
-      inventory_sheet = InventorySheet.find_by(id: params[:id], deleted_at: nil)
-      inventory_sheet.deleted_at = DateTime.now.to_date
-      inventory_sheet.save
-
-      render :status => :ok, :json => {
-        message: 'Destroyed Inventory Sheet.'
-      }
-    end
+    render :status => :ok, :json => {
+      message: 'Destroyed Inventory Sheet.'
+    }
+  end
 
 end

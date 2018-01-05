@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171230230541) do
+ActiveRecord::Schema.define(version: 20180104215716) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -88,6 +88,29 @@ ActiveRecord::Schema.define(version: 20171230230541) do
     t.index ["deleted_at"], name: "index_items_on_deleted_at", using: :btree
     t.index ["invoice_id"], name: "index_items_on_invoice_id", using: :btree
     t.index ["updated_at"], name: "index_items_on_updated_at", using: :btree
+  end
+
+  create_table "reports", force: :cascade do |t|
+    t.integer  "start_inventory_sheet_id",                         null: false
+    t.integer  "end_inventory_sheet_id",                           null: false
+    t.date     "start_date_range",                                 null: false
+    t.date     "end_date_range",                                   null: false
+    t.decimal  "beer_sales_total",         precision: 8, scale: 2, null: false
+    t.decimal  "wine_sales_total",         precision: 8, scale: 2, null: false
+    t.decimal  "food_sales_total",         precision: 8, scale: 2, null: false
+    t.date     "deleted_at"
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
+    t.index ["beer_sales_total"], name: "index_reports_on_beer_sales_total", using: :btree
+    t.index ["created_at"], name: "index_reports_on_created_at", using: :btree
+    t.index ["deleted_at"], name: "index_reports_on_deleted_at", using: :btree
+    t.index ["end_date_range"], name: "index_reports_on_end_date_range", using: :btree
+    t.index ["end_inventory_sheet_id"], name: "index_reports_on_end_inventory_sheet_id", using: :btree
+    t.index ["food_sales_total"], name: "index_reports_on_food_sales_total", using: :btree
+    t.index ["start_date_range"], name: "index_reports_on_start_date_range", using: :btree
+    t.index ["start_inventory_sheet_id"], name: "index_reports_on_start_inventory_sheet_id", using: :btree
+    t.index ["updated_at"], name: "index_reports_on_updated_at", using: :btree
+    t.index ["wine_sales_total"], name: "index_reports_on_wine_sales_total", using: :btree
   end
 
   create_table "vendors", force: :cascade do |t|
