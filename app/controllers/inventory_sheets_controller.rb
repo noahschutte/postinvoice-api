@@ -18,16 +18,20 @@ class InventorySheetsController < ApplicationController
   end
 
   def create
-    inventory_sheet = InventorySheet.create!(
-      date: request[:date],
-      beer_total: request[:beerTotal],
-      wine_total: request[:wineTotal],
-      food_total: request[:foodTotal]
-    )
+    existing_inventory_sheet = InventorySheet.find_by(date: request[:date], deleted_at: nil)
+    if existing_inventory_sheet
+      render :status => 400, :json => { errorMessage: "Inventory sheet already exists for this date." }
+    else
+      inventory_sheet = InventorySheet.create!(
+        date: request[:date],
+        beer_total: request[:beerTotal],
+        wine_total: request[:wineTotal],
+        food_total: request[:foodTotal]
+      )
 
-    render :status => :ok, :json => {
-      inventorySheetId: inventory_sheet.id
-    }
+      render :status => :ok, :json => {
+        inventorySheetId: inventory_sheet.id
+      }
   end
 
   def destroy
