@@ -32,6 +32,7 @@ class InventorySheetsController < ApplicationController
       render :status => :ok, :json => {
         inventorySheetId: inventory_sheet.id
       }
+    end
   end
 
   def destroy
