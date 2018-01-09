@@ -73,6 +73,8 @@ class ReportsController < ApplicationController
       id: report.id,
       startInvoiceDateRange: start_invoice_date_range,
       endInvoiceDateRange: end_invoice_date_range,
+      startInventorySheetId: start_inventory_sheet.id,
+      endInventorySheetId: end_inventory_sheet.id,
       beerPriorInventoryAmount: beer_prior_inventory_amount,
       beerEndingInventoryAmount: beer_ending_inventory_amount,
       winePriorInventoryAmount: wine_prior_inventory_amount,
