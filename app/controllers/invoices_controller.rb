@@ -97,14 +97,14 @@ class InvoicesController < ApplicationController
     invoice_items.each do |invoice_item|
       code_ids.push(invoice_item.code_id)
     end
-    code_ids.each do |code_id|
-      items_with_code = Item.where(code_id: code_id, deleted_at: nil)
-      if items_with_code.count == 1
-        code = Code.find_by(id: code_id, deleted_at: nil)
-        code.deleted_at = DateTime.now.to_date
-        code.save
-      end
-    end
+    # code_ids.each do |code_id|
+    #   items_with_code = Item.where(code_id: code_id, deleted_at: nil)
+    #   if items_with_code.count == 1
+    #     code = Code.find_by(id: code_id, deleted_at: nil)
+    #     code.deleted_at = DateTime.now.to_date
+    #     code.save
+    #   end
+    # end
 
     if invoice_items.count
       invoice_items.each do |item|
